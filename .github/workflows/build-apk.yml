@@ -5,12 +5,14 @@ on:
     branches: [ "main", "master" ]
   pull_request:
     branches: [ "main", "master" ]
-  workflow_dispatch: # Memungkinkan tombol 'Run workflow' manual di GitHub
+  workflow_dispatch:
 
 jobs:
   build:
     name: Build & Export APK
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: 📥 Checkout Repository
@@ -29,9 +31,20 @@ jobs:
       - name: 📦 Kompilasi APK (assembleDebug)
         run: ./gradlew assembleDebug --stacktrace
 
-      - name: 🚀 Upload File APK Siap Install
+      - name: 🚀 Upload File APK ke Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: MLJuice-POS-v1-Debug
           path: app/build/outputs/apk/debug/*.apk
           retention-days: 14
+
+      - name: 🏷️ Publikasikan APK Langsung ke Menu Releases Beranda
+        if: github.ref == 'refs/heads/main'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1.0.0
+          name: "ML Juice POS v1.0.0 (APK Siap Pasang)"
+          body: "Unduh file MLJuice-POS.apk langsung di bawah ini untuk dipasang di HP / tablet Android."
+          files: app/build/outputs/apk/debug/*.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
