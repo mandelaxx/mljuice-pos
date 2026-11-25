@@ -1,0 +1,9 @@
+<resources>
+    <style name="Theme.MLJuice" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/primary_green</item>
+        <item name="colorPrimaryDark">@color/primary_dark_green</item>
+        <item name="colorSecondary">@color/accent_lime</item>
+        <item name="android:statusBarColor">@color/primary_dark_green</item>
+        <item name="android:windowBackground">@color/background_light</item>
+    </style>
+</resources>

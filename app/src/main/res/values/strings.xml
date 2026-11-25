@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">ML Juice POS</string>
+    <string name="tagline">Segar Alami Setiap Hari</string>
+    <string name="login_title">Masuk ke ML Juice POS</string>
+    <string name="email_hint">Email Kasir / Pemilik</string>
+    <string name="password_hint">Kata Sandi</string>
+    <string name="btn_login">Masuk</string>
+    <string name="btn_checkout">Bayar Sekarang</string>
+    <string name="dialog_update_title">Pembaruan Tersedia</string>
+    <string name="dialog_update_desc">Versi baru ML Juice POS telah siap dipasang. Perbarui untuk mendapatkan fitur dan perbaikan terbaru.</string>
+    <string name="btn_update_now">Perbarui Sekarang</string>
+    <string name="btn_update_later">Nanti</string>
+</resources>

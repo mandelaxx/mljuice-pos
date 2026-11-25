@@ -1,0 +1,37 @@
+name: Build ML Juice POS APK
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+  workflow_dispatch: # Memungkinkan tombol 'Run workflow' manual di GitHub
+
+jobs:
+  build:
+    name: Build & Export APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: ☕ Setup JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
+
+      - name: 🔑 Berikan Izin Eksekusi Gradle Wrapper
+        run: chmod +x ./gradlew
+
+      - name: 📦 Kompilasi APK (assembleDebug)
+        run: ./gradlew assembleDebug --stacktrace
+
+      - name: 🚀 Upload File APK Siap Install
+        uses: actions/upload-artifact@v4
+        with:
+          name: MLJuice-POS-v1-Debug
+          path: app/build/outputs/apk/debug/*.apk
+          retention-days: 14
