@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "123456789012",
-    "project_id": "hermes-agent-backend",
-    "storage_bucket": "hermes-agent-backend.appspot.com"
+    "project_number": "1000889668930",
+    "project_id": "mljuice-pos",
+    "storage_bucket": "mljuice-pos.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:123456789012:android:abcdef1234567890abcdef",
+        "mobilesdk_app_id": "1:1000889668930:android:203341b8a246a09ea664db",
         "android_client_info": {
           "package_name": "com.mljuice"
         }
