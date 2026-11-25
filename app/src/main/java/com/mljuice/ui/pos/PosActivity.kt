@@ -29,6 +29,8 @@ import com.mljuice.data.local.entity.SaleItemEntity
 import com.mljuice.data.repository.ProductRepository
 import com.mljuice.data.repository.SaleRepository
 import com.mljuice.printer.BluetoothPrinterHelper
+import com.google.firebase.auth.FirebaseAuth
+import com.mljuice.ui.auth.LoginActivity
 import com.mljuice.ui.kitchen.KitchenActivity
 import com.mljuice.ui.reports.ReportActivity
 import com.mljuice.ui.shift.ShiftActivity
@@ -99,6 +101,9 @@ class PosActivity : AppCompatActivity() {
         }
         findViewById<View>(R.id.btnNavShift).setOnClickListener {
             startActivity(Intent(this, ShiftActivity::class.java))
+        }
+        findViewById<View>(R.id.btnNavProfile).setOnClickListener {
+            showProfileDialog()
         }
     }
 
@@ -402,5 +407,74 @@ class PosActivity : AppCompatActivity() {
             cartAdapter.notifyDataSetChanged()
             updateCartSummary()
         }
+    }
+
+    private fun showProfileDialog() {
+        val auth = FirebaseAuth.getInstance()
+        val user = auth.currentUser
+
+        val dialog = BottomSheetDialog(this)
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_profile, null)
+        dialog.setContentView(dialogView)
+
+        val tvName = dialogView.findViewById<TextView>(R.id.tvProfileName)
+        val tvEmail = dialogView.findViewById<TextView>(R.id.tvProfileEmail)
+        val etNewPassword = dialogView.findViewById<EditText>(R.id.etNewPassword)
+        val etConfirmPassword = dialogView.findViewById<EditText>(R.id.etConfirmPassword)
+        val btnUpdatePassword = dialogView.findViewById<MaterialButton>(R.id.btnUpdatePassword)
+        val btnLogout = dialogView.findViewById<MaterialButton>(R.id.btnLogout)
+        val btnClose = dialogView.findViewById<View>(R.id.btnCloseProfile)
+
+        btnClose.setOnClickListener { dialog.dismiss() }
+
+        if (user != null) {
+            tvName.text = user.displayName ?: "Owner ML Juice"
+            tvEmail.text = user.email ?: "Akun Terhubung Firebase"
+        } else {
+            tvName.text = "Kasir Tamu (Offline Mode)"
+            tvEmail.text = "Tidak terhubung ke akun cloud"
+            etNewPassword.isEnabled = false
+            etConfirmPassword.isEnabled = false
+            btnUpdatePassword.isEnabled = false
+            btnUpdatePassword.text = "Hanya Tersedia untuk Akun Login"
+        }
+
+        btnUpdatePassword.setOnClickListener {
+            val newPass = etNewPassword.text.toString().trim()
+            val confirmPass = etConfirmPassword.text.toString().trim()
+
+            if (newPass.length < 6) {
+                etNewPassword.error = "Kata sandi minimal 6 karakter"
+                return@setOnClickListener
+            }
+            if (newPass != confirmPass) {
+                etConfirmPassword.error = "Konfirmasi kata sandi tidak cocok"
+                return@setOnClickListener
+            }
+
+            btnUpdatePassword.isEnabled = false
+            btnUpdatePassword.text = "Memperbarui..."
+
+            user?.updatePassword(newPass)
+                ?.addOnSuccessListener {
+                    Toast.makeText(this, "✓ Kata sandi berhasil diperbarui!", Toast.LENGTH_LONG).show()
+                    dialog.dismiss()
+                }
+                ?.addOnFailureListener { e ->
+                    Toast.makeText(this, "Gagal memperbarui: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
+                    btnUpdatePassword.isEnabled = true
+                    btnUpdatePassword.text = "Simpan Kata Sandi Baru"
+                }
+        }
+
+        btnLogout.setOnClickListener {
+            auth.signOut()
+            Toast.makeText(this, "Berhasil keluar dari akun", Toast.LENGTH_SHORT).show()
+            dialog.dismiss()
+            startActivity(Intent(this, LoginActivity::class.java))
+            finish()
+        }
+
+        dialog.show()
     }
 }

@@ -71,6 +71,17 @@
             android:text="⏰ Shift Kasir"
             android:textColor="@android:color/white"
             android:textSize="12sp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnNavProfile"
+            style="@style/Widget.Material3.Button.TonalButton"
+            android:layout_width="wrap_content"
+            android:layout_height="38dp"
+            android:layout_marginStart="8dp"
+            android:backgroundTint="#388E3C"
+            android:text="👤 Akun &amp; Profil"
+            android:textColor="@android:color/white"
+            android:textSize="12sp" />
     </LinearLayout>
 
     <!-- Main Workspace (Dual Pane: Menu on Left, Cart on Right) -->
